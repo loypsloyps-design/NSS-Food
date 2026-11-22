@@ -20,6 +20,11 @@ jobs:
           node-version: '22'
       - run: npm install --no-audit --no-fund
       - run: npm run build -- --base=./
+      - name: Verify compiled output
+        run: |
+          test -f dist/index.html
+          if grep -q 'src/main.tsx' dist/index.html; then exit 1; fi
+          test -n "$(find dist/assets -name '*.js' -print -quit)"
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
