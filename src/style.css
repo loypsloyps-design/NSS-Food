@@ -22,3 +22,5 @@ article{min-height:116px;gap:16px;margin:10px 0}article .grow{min-width:0}articl
 .menu-search{width:100%;background:#fff;border:1px solid #e7dfd6;padding:15px 18px;border-radius:14px;margin:4px 0 10px}.mobile-cart{display:none}#cart-panel{scroll-margin-top:135px}@media(max-width:760px){.mobile-cart{display:block;position:fixed;bottom:16px;left:16px;right:16px;z-index:10;box-shadow:0 6px 24px #201c1933;padding:16px}main{padding-bottom:90px}}
 
 .menu-overview{flex:1;min-width:0}.menu-overview .line{border-bottom:1px solid #eee5dc;padding:8px 0;flex-wrap:wrap}.menu-overview h4{margin:16px 0 4px}.menu-overview small{color:#64554a}@media(max-width:760px){article:has(.menu-overview){flex-wrap:wrap}.menu-overview{flex-basis:100%}}
+
+.checkout-form{display:grid;gap:12px;margin-top:18px;border-top:1px solid #eee5dc;padding-top:16px}.checkout-form label{display:grid;gap:5px;font-size:14px}.checkout-form input,.checkout-form select{width:100%;box-sizing:border-box}.checkout-form button{padding:12px}.checkout-form p{font-size:14px}
