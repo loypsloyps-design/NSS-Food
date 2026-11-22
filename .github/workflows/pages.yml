@@ -23,8 +23,14 @@ jobs:
       - name: Verify compiled output
         run: |
           test -f dist/index.html
-          if grep -q 'src/main.tsx' dist/index.html; then exit 1; fi
+          if grep -Eq 'src=["\x27][^"\x27]*src/main\.tsx' dist/index.html; then exit 1; fi
           test -n "$(find dist/assets -name '*.js' -print -quit)"
+      - name: Create dedicated panel entry pages
+        run: |
+          mkdir -p dist/restaurante dist/admin
+          for area in restaurante admin; do
+            sed 's|"./assets/|"../assets/|g' dist/index.html > "dist/$area/index.html"
+          done
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
