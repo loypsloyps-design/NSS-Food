@@ -24,3 +24,5 @@ article{min-height:116px;gap:16px;margin:10px 0}article .grow{min-width:0}articl
 .menu-overview{flex:1;min-width:0}.menu-overview .line{border-bottom:1px solid #eee5dc;padding:8px 0;flex-wrap:wrap}.menu-overview h4{margin:16px 0 4px}.menu-overview small{color:#64554a}@media(max-width:760px){article:has(.menu-overview){flex-wrap:wrap}.menu-overview{flex-basis:100%}}
 
 .checkout-form{display:grid;gap:12px;margin-top:18px;border-top:1px solid #eee5dc;padding-top:16px}.checkout-form label{display:grid;gap:5px;font-size:14px}.checkout-form input,.checkout-form select{width:100%;box-sizing:border-box}.checkout-form button{padding:12px}.checkout-form p{font-size:14px}
+
+[hidden]{display:none!important}.checkout-form{scroll-margin-top:140px}.checkout-form input,.checkout-form select{font-size:16px}.checkout-form button[type=submit]{width:100%}
