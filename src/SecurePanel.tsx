@@ -1,6 +1,6 @@
 import React,{useEffect,useState} from 'react';
 import {createClient,type Session} from '@supabase/supabase-js';
-const db=createClient('https://mnpxuyulazutsfpljelm.supabase.co',"sb_publishable_CFIxkoQjsal0-QviUsU89g_qqCmNiuk");
+export const db=createClient('https://mnpxuyulazutsfpljelm.supabase.co',"sb_publishable_CFIxkoQjsal0-QviUsU89g_qqCmNiuk");
 type Restaurant={id:string;name:string;slug:string;active:boolean;delivery_fee_cents:number};
 export function SecurePanel({admin}:{admin:boolean}){
 const [session,setSession]=useState<Session|null>(null),[ready,setReady]=useState(false),[email,setEmail]=useState(''),[password,setPassword]=useState(''),[message,setMessage]=useState(''),[busy,setBusy]=useState(false),[restaurants,setRestaurants]=useState<Restaurant[]>([]),[allowed,setAllowed]=useState(false),[checked,setChecked]=useState(false);
