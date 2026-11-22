@@ -1,0 +1,3 @@
+grant insert (name,slug,delivery_fee_cents), update (name,slug,delivery_fee_cents,active) on public.restaurants to authenticated;
+create policy admin_create_restaurant on public.restaurants for insert to authenticated with check (not active and exists(select 1 from public.platform_admins a where a.user_id=(select auth.uid())));
+create policy admin_update_restaurant on public.restaurants for update to authenticated using(exists(select 1 from public.platform_admins a where a.user_id=(select auth.uid()))) with check(exists(select 1 from public.platform_admins a where a.user_id=(select auth.uid())));
