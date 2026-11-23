@@ -2,14 +2,14 @@ import React,{useEffect,useState} from 'react';
 import {createRoot} from 'react-dom/client';
 import './style.css';
 import {SecurePanel,db} from './SecurePanel';
-type Product={id:string;category_id:string;name:string;description:string;price_cents:number};
+type Product={id:string;category_id:string;name:string;description:string;price_cents:number;image_path:string|null};
 type Category={id:string;name:string};
 type Restaurant={id:string;name:string;delivery_fee_cents:number};
 const money=(c:number)=>(c/100).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
 type DemoOrder={id:string;items:string;total:number;stage:number;customer:string;phone:string;address:string;method:string};
 const stages=['Recebido','Confirmado','Em preparo','Saiu para entrega','Entregue'];
 function Menu({onOrder}:{onOrder:(order:DemoOrder)=>void}){const [restaurant,setRestaurant]=useState<Restaurant|null>(null),[categories,setCategories]=useState<Category[]>([]),[products,setProducts]=useState<Product[]>([]),[cart,setCart]=useState<Record<string,number>>({}),[error,setError]=useState(''),[loading,setLoading]=useState(true),[notice,setNotice]=useState(''),[search,setSearch]=useState(''),[method,setMethod]=useState('pix'),[customer,setCustomer]=useState(''),[phone,setPhone]=useState(''),[address,setAddress]=useState('');
-useEffect(()=>{let live=true;async function load(){try{const slug=new URLSearchParams(location.search).get('restaurante')||'nss-burger';const res=await db.from('restaurants').select('id,name,delivery_fee_cents').eq('slug',slug).eq('active',true).single();if(res.error)throw res.error;const [c,p]=await Promise.all([db.from('categories').select('id,name').eq('restaurant_id',res.data.id).eq('active',true).order('name'),db.from('products').select('id,category_id,name,description,price_cents').eq('restaurant_id',res.data.id).eq('active',true).order('name')]);if(c.error||p.error)throw new Error('Cardápio indisponível');if(live){setRestaurant(res.data);setCategories(c.data||[]);setProducts(p.data||[]);}}catch{if(live)setError('Cardápio indisponível no momento.');}finally{if(live)setLoading(false);}}void load();return()=>{live=false;};},[]);
+useEffect(()=>{let live=true;async function load(){try{const slug=new URLSearchParams(location.search).get('restaurante')||'nss-burger';const res=await db.from('restaurants').select('id,name,delivery_fee_cents').eq('slug',slug).eq('active',true).single();if(res.error)throw res.error;const [c,p]=await Promise.all([db.from('categories').select('id,name').eq('restaurant_id',res.data.id).eq('active',true).order('name'),db.from('products').select('id,category_id,name,description,price_cents,image_path').eq('restaurant_id',res.data.id).eq('active',true).order('name')]);if(c.error||p.error)throw new Error('Cardápio indisponível');if(live){setRestaurant(res.data);setCategories(c.data||[]);setProducts(p.data||[]);}}catch{if(live)setError('Cardápio indisponível no momento.');}finally{if(live)setLoading(false);}}void load();return()=>{live=false;};},[]);
 const add=(id:string)=>{setNotice('');setCart(v=>({...v,[id]:Math.min(99,(v[id]||0)+1)}));};
 const remove=(id:string)=>setCart(v=>({...v,[id]:Math.max(0,(v[id]||0)-1)}));
 const items=products.filter(p=>cart[p.id]>0);const subtotal=items.reduce((n,p)=>n+p.price_cents*cart[p.id],0),fee=items.length?(restaurant?.delivery_fee_cents||0):0;
@@ -22,7 +22,7 @@ return <>
 <section><h2>Cardápio</h2><input className="menu-search" type="search" placeholder="Buscar produtos..." value={search} onChange={e=>setSearch(e.target.value)}/>
 {[...categories].sort((a,b)=>rank(a.name)-rank(b.name)).map(c=>{
 const visible=products.filter(p=>p.category_id===c.id&&match(p));
-return visible.length>0?<section key={c.id}><h3>{c.name}</h3>{visible.map(p=><article key={p.id}><div className="emoji">🍔</div><div className="grow"><h3>{p.name}</h3><p>{p.description}</p><b>{money(p.price_cents)}</b></div><button onClick={()=>add(p.id)}>+</button></article>)}</section>:null;
+return visible.length>0?<section key={c.id}><h3>{c.name}</h3>{visible.map(p=><article key={p.id}>{p.image_path?<img className="product-thumb public-thumb" alt={p.name} loading="lazy" src={db.storage.from("menu-photos").getPublicUrl(p.image_path).data.publicUrl}/>:<div className="product-thumb public-thumb placeholder">Sem foto</div>}<div className="grow"><h3>{p.name}</h3><p>{p.description}</p><b>{money(p.price_cents)}</b></div><button onClick={()=>add(p.id)}>+</button></article>)}</section>:null;
 })}</section>
 <section id="cart-panel" className="panel"><h2>Seu pedido</h2>
 {!items.length&&<p>Seu carrinho está vazio.</p>}
